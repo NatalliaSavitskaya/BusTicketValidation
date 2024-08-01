@@ -13,12 +13,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws JsonProcessingException {
-        int counterValidTickets = 0;
-        int counterInalidTicketType = 0;
-        int counterInalidStartDate = 0;
-        int counterInvalidPrice = 0;
         int x = 0;
-
         // Choosing the variant of input
         Scanner scanner = new Scanner(System.in);
         System.out.println("Press 1, if you want to input the Bus Ticket by hand, 2 - if you want to import Bus Tickets from the file.");
@@ -35,24 +30,9 @@ public class Main {
                     do {
                      String input = getInput();
                      BusTicket busTicket = new ObjectMapper().readValue(input, BusTicket.class);
-                     // Bus Ticket validation
-                     if (!busTicket.isValidTicketType()) {
-                        counterInalidTicketType++;
-                        System.out.println("Invalid ticket type.");
-                     }
-                    if (!busTicket.isValidStartDate()) {
-                        counterInalidStartDate++;
-                        System.out.println("Invalid start date.");
-                    }
-                    if (!busTicket.isValidPrice()) {
-                        counterInvalidPrice++;
-                        System.out.println("Invalid price.");
-                    }
-                    if (busTicket.isValidTicketType() && busTicket.isValidStartDate() && busTicket.isValidPrice())
-                        counterValidTickets++;
-
-                    System.out.println(busTicket.toString());
-                    x++;
+                     busTicket.ticketValidation(); // Bus Ticket validation
+                     System.out.println(busTicket.toString());
+                     x++;
                 } while (x < counterTotalTickets);
             } else throw new IllegalArgumentException("The number of tickets can't be <= 0.");
             break;
@@ -66,22 +46,8 @@ public class Main {
                         try {
                             BusTicket busTicket = new ObjectMapper().readValue(line, BusTicket.class);
                             x++;
-                            // Bus Ticket validation
-                            if (!busTicket.isValidTicketType()) {
-                              counterInalidTicketType++;
-                              System.out.println("Invalid ticket type.");
-                            }
-                            if (!busTicket.isValidStartDate()) {
-                              counterInalidStartDate++;
-                              System.out.println("Invalid start date.");
-                            }
-                            if (!busTicket.isValidPrice()) {
-                              counterInvalidPrice++;
-                              System.out.println("Invalid price.");
-                            }
-                            if (busTicket.isValidTicketType() && busTicket.isValidStartDate() && busTicket.isValidPrice())
-                                counterValidTickets++;
-                                System.out.println(busTicket.toString());
+                            busTicket.ticketValidation(); // Bus Ticket validation
+                            System.out.println(busTicket.toString());
                             }
                         catch (IOException e) {
                             System.err.println("Error parsing JSON: " + e.getMessage());
@@ -98,22 +64,23 @@ public class Main {
                 return;
         }
         scanner.close();
-
-        // Printing the results of validation
-        System.out.println("Total = " + x++);
-        System.out.println("Valid = " + counterValidTickets++);
-
-        int max = Math.max(counterInalidTicketType, Math.max(counterInalidStartDate, counterInvalidPrice));
-        if (max == 0)
-            System.out.println("There is no invalid tickets.");
-        else if (max == counterInalidTicketType)
-            System.out.println("Most popular violation = type.");
-        else if (max == counterInalidStartDate)
-            System.out.println("Most popular violation = start date.");
-        else System.out.println("Most popular violation = price.");
+        printResult(x);
     }
 
     private static String getInput() {
         return new Scanner(System.in).nextLine();
+    }
+
+    private static void printResult (int x) {
+        System.out.println("Total = " + x++);
+        System.out.println("Valid = " + BusTicket.counterValidTickets++);
+        int max = Math.max(BusTicket.counterInvalidTicketType, Math.max(BusTicket.counterInvalidStartDate, BusTicket.counterInvalidPrice));
+        if (max == 0)
+            System.out.println("There is no invalid tickets.");
+        else if (max == BusTicket.counterInvalidTicketType)
+            System.out.println("Most popular violation = type.");
+        else if (max == BusTicket.counterInvalidStartDate)
+            System.out.println("Most popular violation = start date.");
+        else System.out.println("Most popular violation = price.");
     }
 }
