@@ -1,6 +1,7 @@
 package com.danliuk;
 
 import com.danliuk.model.BusTicket;
+import com.danliuk.model.Validator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,8 +34,9 @@ public class Main {
                     do {
                         String input = getInput();
                         BusTicket busTicket = new ObjectMapper().readValue(input, BusTicket.class);
-                        busTicket.ticketValidation(); // Bus Ticket validation
                         System.out.println(busTicket.toString());
+                        Validator validator = new Validator(busTicket);
+                        validator.ticketValidation(); // Bus Ticket validation
                         x++;
                     } while (x < counterTotalTickets);
                 } else throw new IllegalArgumentException("The number of tickets can't be <= 0.");
@@ -49,9 +51,10 @@ public class Main {
                     while ((line = bufferedReader.readLine()) != null) {
                         try {
                             BusTicket busTicket = new ObjectMapper().readValue(line, BusTicket.class);
-                            x++;
-                            busTicket.ticketValidation(); // Bus Ticket validation
                             System.out.println(busTicket.toString());
+                            Validator validator = new Validator(busTicket);
+                            validator.ticketValidation(); // Bus Ticket validation
+                            x++;
                         } catch (IOException e) {
                             System.err.println("Error parsing JSON: " + e.getMessage());
                         }
@@ -66,23 +69,23 @@ public class Main {
                 return;
         }
         scanner.close();
-        printResult(x);
+        printValidationResult(x);
     }
 
     private static String getInput() {
         return new Scanner(System.in).nextLine();
     }
 
-    private static void printResult(int x) {
+    private static void printValidationResult(int x) {
         System.out.println("Total = " + x++);
-        System.out.println("Valid = " + BusTicket.counterValidTickets++);
-        int max = Math.max(BusTicket.counterInvalidTicketType,
-                Math.max(BusTicket.counterInvalidStartDate, BusTicket.counterInvalidPrice));
+        System.out.println("Valid = " + Validator.counterValidTickets++);
+        int max = Math.max(Validator.counterInvalidTicketType,
+                Math.max(Validator.counterInvalidStartDate, Validator.counterInvalidPrice));
         if (max == 0)
             System.out.println("There is no invalid tickets.");
-        else if (max == BusTicket.counterInvalidTicketType)
+        else if (max == Validator.counterInvalidTicketType)
             System.out.println("Most popular violation = type.");
-        else if (max == BusTicket.counterInvalidStartDate)
+        else if (max == Validator.counterInvalidStartDate)
             System.out.println("Most popular violation = start date.");
         else System.out.println("Most popular violation = price.");
     }
