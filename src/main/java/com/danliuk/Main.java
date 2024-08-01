@@ -3,6 +3,7 @@ package com.danliuk;
 import com.danliuk.model.BusTicket;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.lang.Math;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,16 +27,16 @@ public class Main {
                 int counterTotalTickets = scanner.nextInt();
                 scanner.nextLine(); // Clear the buffer
                 if (counterTotalTickets > 0) {
-                  System.out.println("Enter the data.");
+                    System.out.println("Enter the data.");
                     do {
-                     String input = getInput();
-                     BusTicket busTicket = new ObjectMapper().readValue(input, BusTicket.class);
-                     busTicket.ticketValidation(); // Bus Ticket validation
-                     System.out.println(busTicket.toString());
-                     x++;
-                } while (x < counterTotalTickets);
-            } else throw new IllegalArgumentException("The number of tickets can't be <= 0.");
-            break;
+                        String input = getInput();
+                        BusTicket busTicket = new ObjectMapper().readValue(input, BusTicket.class);
+                        busTicket.ticketValidation(); // Bus Ticket validation
+                        System.out.println(busTicket.toString());
+                        x++;
+                    } while (x < counterTotalTickets);
+                } else throw new IllegalArgumentException("The number of tickets can't be <= 0.");
+                break;
 
             case 2:
                 // Reading from the file
@@ -48,13 +49,11 @@ public class Main {
                             x++;
                             busTicket.ticketValidation(); // Bus Ticket validation
                             System.out.println(busTicket.toString());
-                            }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             System.err.println("Error parsing JSON: " + e.getMessage());
                         }
                     }
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.err.println("Error reading the file: " + e.getMessage());
                 }
                 break;
@@ -71,7 +70,7 @@ public class Main {
         return new Scanner(System.in).nextLine();
     }
 
-    private static void printResult (int x) {
+    private static void printResult(int x) {
         System.out.println("Total = " + x++);
         System.out.println("Valid = " + BusTicket.counterValidTickets++);
         int max = Math.max(BusTicket.counterInvalidTicketType, Math.max(BusTicket.counterInvalidStartDate, BusTicket.counterInvalidPrice));
