@@ -28,12 +28,13 @@ public class BusTicket {
     }
 
     public boolean isValidTicketType() {
-        return "DAY".equals(ticketType) || "WEEK".equals(ticketType) || "YEAR".equals(ticketType) || "MONTH".equals(ticketType);
+        return ("DAY".equals(ticketType) || "WEEK".equals(ticketType)
+                || "YEAR".equals(ticketType) || "MONTH".equals(ticketType));
     }
 
     public boolean isValidStartDate() {
         if ((startDate == null) || (startDate.isEmpty()))
-            return !"DAY".equals(ticketType) && !"WEEK".equals(ticketType) && !"YEAR".equals(ticketType);
+            return (!"DAY".equals(ticketType) && !"WEEK".equals(ticketType) && !"YEAR".equals(ticketType));
         else {
             LocalDate date = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
             return (!date.isAfter(LocalDate.now()));
